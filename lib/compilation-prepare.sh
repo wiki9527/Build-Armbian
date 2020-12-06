@@ -24,12 +24,9 @@ compilation_prepare()
 		display_alert "Adjusting" "packaging" "info"
 		cd "$kerneldir" || exit
 		process_patch_file "${SRC}/patch/misc/general-packaging-5.10.y.patch" "applying"
-	elif linux-version compare "${version}" ge 5.9.6; then
-			display_alert "Adjusting" "packaging" "info"
-			cd "$kerneldir" || exit
-			process_patch_file "${SRC}/patch/misc/general-packaging-5.9.y.patch" "applying"
 	elif linux-version compare "${version}" ge 5.8.17 \
-		&& linux-version compare "${version}" le 5.9.5; then
+		&& linux-version compare "${version}" le 5.9 \
+		|| linux-version compare "${version}" ge 5.9.2; then
 			display_alert "Adjusting" "packaging" "info"
 			cd "$kerneldir" || exit
 			process_patch_file "${SRC}/patch/misc/general-packaging-5.8-9.y.patch" "applying"
@@ -371,7 +368,7 @@ compilation_prepare()
 
 
 	# Wireless drivers for Xradio XR819 chipsets
-	if linux-version compare "${version}" ge 4.19 && [[ "$EXTRAWIFI" == yes ]]; then
+	if linux-version compare "${version}" ge 4.19 && [[ "$LINUXFAMILY" == sunxi* ]] && [[ "$EXTRAWIFI" == yes ]]; then
 
 		display_alert "Adding" "Wireless drivers for Xradio XR819 chipsets" "info"
 
