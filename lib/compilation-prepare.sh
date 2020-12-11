@@ -199,18 +199,18 @@ compilation_prepare()
 
 
 	# Updated USB network drivers for RTL8152/RTL8153 based dongles that also support 2.5Gbs variants
-
-	if linux-version compare "${version}" ge 5.4 && [ $LINUXFAMILY != mvebu64 ] && [ $LINUXFAMILY != rk322x ] && [ $LINUXFAMILY != odroidxu4 ] && [ $EXTRAWIFI == yes ]; then
-
-		# attach to specifics tag or branch
-		local rtl8152ver="branch:master"
-
-		display_alert "Adding" "Drivers for 2.5Gb RTL8152/RTL8153 USB dongles ${rtl8152ver}" "info"
-		fetch_from_repo "https://github.com/igorpecovnik/realtek-r8152-linux" "rtl8152" "${rtl8152ver}" "yes"
-		cp -R "${SRC}/cache/sources/rtl8152/${rtl8152ver#*:}"/{r8152.c,compatibility.h} \
-		"$kerneldir/drivers/net/usb/"
-
-	fi
+	# Looks unstable / disabled
+	#if linux-version compare "${version}" ge 5.4 && [ $LINUXFAMILY != mvebu64 ] && [ $LINUXFAMILY != rk322x ] && [ $LINUXFAMILY != odroidxu4 ] && [ $EXTRAWIFI == yes ]; then
+	#
+	#	# attach to specifics tag or branch
+	#	local rtl8152ver="branch:master"
+	#
+	#	display_alert "Adding" "Drivers for 2.5Gb RTL8152/RTL8153 USB dongles ${rtl8152ver}" "info"
+	#	fetch_from_repo "https://github.com/igorpecovnik/realtek-r8152-linux" "rtl8152" "${rtl8152ver}" "yes"
+	#	cp -R "${SRC}/cache/sources/rtl8152/${rtl8152ver#*:}"/{r8152.c,compatibility.h} \
+	#	"$kerneldir/drivers/net/usb/"
+	#
+	#fi
 
 	# Wireless drivers for Realtek 8189ES chipsets
 
@@ -501,8 +501,6 @@ compilation_prepare()
 	fi
 
 
-
-
 	# Wireless drivers for Realtek 88x2bu chipsets
 
 	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
@@ -548,13 +546,17 @@ compilation_prepare()
 
 	# Wireless drivers for Realtek 8723DS chipsets
 
-	if linux-version compare "${version}" ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8723DS chipsets ${rtl8723dsver}" "info"
 
 		if [ "$EXTRAWIFI_LOCAL" == yes ]; then
-			local rtl8723dsver="branch:local_rtl8723ds"
+			if [ "$BRANCH" == legacy ]; then
+				local rtl8723dsver="branch:local_rtl8723ds-rk"
+			else
+				local rtl8723dsver="branch:local_rtl8723ds"
+			fi
 			fetch_from_repo "https://github.com/150balbes/wifi" "rtl8723ds" "${rtl8723dsver}" "yes"
 		else
 			local rtl8723dsver="branch:master"
@@ -587,17 +589,19 @@ compilation_prepare()
 	fi
 
 
-
-
 	# Wireless drivers for Realtek 8723DU chipsets
 
-	if linux-version compare $version ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare $version ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8723DU chipsets ${rtl8723duver}" "info"
 
 		if [ "$EXTRAWIFI_LOCAL" == yes ]; then
-			local rtl8723duver="branch:local_rtl8723du"
+			if [ "$BRANCH" == legacy ]; then
+				local rtl8723duver="branch:local_rtl8723du-rk"
+			else
+				local rtl8723duver="branch:local_rtl8723du"
+			fi
 			fetch_from_repo "https://github.com/150balbes/wifi" "rtl8723du" "${rtl8723duver}" "yes"
 		else
 			local rtl8723duver="branch:master"
@@ -635,7 +639,7 @@ compilation_prepare()
 
 	# Wireless drivers for Realtek 8192CU chipsets
 
-	if linux-version compare "${version}" ge 5.5 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8192CU chipsets ${rtl8192cuver}" "info"
@@ -677,9 +681,10 @@ compilation_prepare()
 
 	fi
 
+
 	# Wireless drivers for Realtek 8822BS chipsets
 
-	if linux-version compare "${version}" ge 5.5 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8822BS chipsets ${rtl8822bsver}" "info"
