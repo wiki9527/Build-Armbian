@@ -1,25 +1,33 @@
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -99,6 +99,12 @@
- 		 * - PDN (power down when low)
- 		 */
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi	2020-04-08 11:27:04.486670792 +0000
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi	2020-04-10 19:59:01.945704455 +0000
+@@ -34,6 +34,12 @@
  		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-+	};
-+
+ 	};
+ 
 +	sound {
 +		compatible = "audio-graph-card";
 +		label = "rockchip,rk3399";
 +		dais = <&i2s0_p0>;
++	};
++
+ 	vcc12v_dcin: dc-12v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc12v_dcin";
+@@ -132,6 +138,7 @@
+ 		regulator-max-microvolt = <1400000>;
+ 		vin-supply = <&vcc5v0_sys>;
  	};
++
+ };
  
- 	sys_12v: sys_12v {
-@@ -502,6 +508,23 @@
+ &cpu_l0 {
+@@ -434,6 +441,23 @@
  	i2c-scl-rising-time-ns = <300>;
  	i2c-scl-falling-time-ns = <15>;
  	status = "okay";
 +
-+	es8328: codec@11 {
-+		compatible = "everest,es8328";
++	es8316: codec@11 {
++		compatible = "everest,es8316";
 +		reg = <0x11>;
 +		clocks = <&cru SCLK_I2S_8CH_OUT>;
 +		clock-names = "mclk";
@@ -28,7 +36,7 @@
 +		#sound-dai-cells = <0>;
 +
 +		port {
-+			es8328_p0_0: endpoint {
++			es8316_p0_0: endpoint {
 +				remote-endpoint = <&i2s0_p0_0>;
 +			};
 +		};
@@ -37,7 +45,7 @@
  };
  
  &i2c3 {
-@@ -566,6 +589,15 @@
+@@ -452,6 +476,15 @@
  	rockchip,playback-channels = <8>;
  	rockchip,capture-channels = <8>;
  	status = "okay";
@@ -46,28 +54,17 @@
 +		i2s0_p0_0: endpoint {
 +			dai-format = "i2s";
 +			mclk-fs = <256>;
-+			remote-endpoint = <&es8328_p0_0>;
++			remote-endpoint = <&es8316_p0_0>;
 +		};
-+	};
++	};		
 +
  };
  
  &i2s1 {
-@@ -579,7 +611,7 @@
- };
- 
- &io_domains {
--	audio-supply = <&vcca1v8_codec>;
-+	audio-supply = <&vcc_3v0>;
- 	bt656-supply = <&vcc_3v0>;
- 	gpio1830-supply = <&vcc_3v0>;
- 	sdmmc-supply = <&vcc_sdio>;
-@@ -673,6 +705,21 @@
- 
- 		fusb1_int: fusb1-int {
- 			rockchip,pins = <1 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
+@@ -583,6 +616,21 @@
+ 			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
 +
 +	i2s0 {
 +		i2s0_8ch_bus: i2s0-8ch-bus {
@@ -81,7 +78,8 @@
 +
 +		i2s_8ch_mclk: i2s-8ch-mclk {
 +			rockchip,pins = <4 0 1 &pcfg_pull_none>;
- 		};
- 	};
++		};
++	};
  };
-
+ 
+ &pwm2 {
