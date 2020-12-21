@@ -24,12 +24,9 @@ compilation_prepare()
 		display_alert "Adjusting" "packaging" "info"
 		cd "$kerneldir" || exit
 		process_patch_file "${SRC}/patch/misc/general-packaging-5.10.y.patch" "applying"
-	elif linux-version compare "${version}" ge 5.9.6; then
-			display_alert "Adjusting" "packaging" "info"
-			cd "$kerneldir" || exit
-			process_patch_file "${SRC}/patch/misc/general-packaging-5.9.y.patch" "applying"
 	elif linux-version compare "${version}" ge 5.8.17 \
-		&& linux-version compare "${version}" le 5.9.5; then
+		&& linux-version compare "${version}" le 5.9 \
+		|| linux-version compare "${version}" ge 5.9.2; then
 			display_alert "Adjusting" "packaging" "info"
 			cd "$kerneldir" || exit
 			process_patch_file "${SRC}/patch/misc/general-packaging-5.8-9.y.patch" "applying"
@@ -371,7 +368,7 @@ compilation_prepare()
 
 
 	# Wireless drivers for Xradio XR819 chipsets
-	if linux-version compare "${version}" ge 4.19 && [[ "$EXTRAWIFI" == yes ]]; then
+	if linux-version compare "${version}" ge 4.19 && [[ "$LINUXFAMILY" == sunxi* ]] && [[ "$EXTRAWIFI" == yes ]]; then
 
 		display_alert "Adding" "Wireless drivers for Xradio XR819 chipsets" "info"
 
@@ -504,8 +501,6 @@ compilation_prepare()
 	fi
 
 
-
-
 	# Wireless drivers for Realtek 88x2bu chipsets
 
 	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
@@ -551,13 +546,17 @@ compilation_prepare()
 
 	# Wireless drivers for Realtek 8723DS chipsets
 
-	if linux-version compare "${version}" ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8723DS chipsets ${rtl8723dsver}" "info"
 
 		if [ "$EXTRAWIFI_LOCAL" == yes ]; then
-			local rtl8723dsver="branch:local_rtl8723ds"
+			if [ "$BRANCH" == legacy ]; then
+				local rtl8723dsver="branch:local_rtl8723ds-rk"
+			else
+				local rtl8723dsver="branch:local_rtl8723ds"
+			fi
 			fetch_from_repo "https://github.com/150balbes/wifi" "rtl8723ds" "${rtl8723dsver}" "yes"
 		else
 			local rtl8723dsver="branch:master"
@@ -590,17 +589,19 @@ compilation_prepare()
 	fi
 
 
-
-
 	# Wireless drivers for Realtek 8723DU chipsets
 
-	if linux-version compare $version ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare $version ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8723DU chipsets ${rtl8723duver}" "info"
 
 		if [ "$EXTRAWIFI_LOCAL" == yes ]; then
-			local rtl8723duver="branch:local_rtl8723du"
+			if [ "$BRANCH" == legacy ]; then
+				local rtl8723duver="branch:local_rtl8723du-rk"
+			else
+				local rtl8723duver="branch:local_rtl8723du"
+			fi
 			fetch_from_repo "https://github.com/150balbes/wifi" "rtl8723du" "${rtl8723duver}" "yes"
 		else
 			local rtl8723duver="branch:master"
@@ -638,7 +639,7 @@ compilation_prepare()
 
 	# Wireless drivers for Realtek 8192CU chipsets
 
-	if linux-version compare "${version}" ge 5.5 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8192CU chipsets ${rtl8192cuver}" "info"
@@ -680,9 +681,10 @@ compilation_prepare()
 
 	fi
 
+
 	# Wireless drivers for Realtek 8822BS chipsets
 
-	if linux-version compare "${version}" ge 5.5 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		display_alert "Adding" "Wireless drivers for Realtek 8822BS chipsets ${rtl8822bsver}" "info"

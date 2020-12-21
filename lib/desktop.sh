@@ -154,8 +154,4 @@ desktop_postinstall ()
 		cp $SRC/packages/bsp/pinebook-pro/pointers.xml ${SDCARD}/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/
 		cp $SRC/packages/bsp/pinebook-pro/xfce4-keyboard-shortcuts.xml ${SDCARD}/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/
 	fi
-
-	mkdir -p $SDCARD/etc/skel/Desktop/
-	cp $SRC/cache/SRC/Test* $SDCARD/etc/skel/Desktop
-
 }
