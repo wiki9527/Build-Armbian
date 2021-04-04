@@ -502,7 +502,7 @@ compile_firmware()
 	if [[ $USE_MAINLINE_GOOGLE_MIRROR == yes ]]; then
 		plugin_repo="https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware.git"
 	else
-		plugin_repo="https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git"
+		plugin_repo="https://mirrors.tuna.tsinghua.edu.cn/git/linux-firmware.git"
 	fi
 
 	firmwaretempdir=$(mktemp -d)
