@@ -347,6 +347,7 @@ install_common()
 
 	# copy "first run automated config, optional user configured"
  	cp "${SRC}"/packages/bsp/armbian_first_run.txt.template "${SDCARD}"/boot/armbian_first_run.txt.template
+	cp -a "${SRC}"/packages/bsp/${BOARD}/install "${SDCARD}"/boot/
 
 	# switch to beta repository at this stage if building nightly images
 	[[ $IMAGE_TYPE == nightly ]] \
