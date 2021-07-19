@@ -20,7 +20,7 @@ jobs:
        run: |
         ./compile.sh  BOARD=aml-s812 BRANCH=dev RELEASE=focal BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=img   
      - name: finish
-       run: echo "enjoy" && ls -alh outputs/images/
+       run: echo "enjoy" && ls -alh
      
      - name: xz
        run: pwd && sudo xz -9kv output/images/*.img && ls -alh output/images/
