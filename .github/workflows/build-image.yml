@@ -6,7 +6,7 @@ on:
       ssh:
         description: 'SSH connection to Actions'
         required: false
-        default: 'true'
+        default: 'false'
 jobs:
   build:
     name: latest
@@ -18,7 +18,7 @@ jobs:
        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')     
      - name: Build image
        run: |
-        ./compile.sh  BOARD=aml-s812 BRANCH=dev RELEASE=focal BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=img   
+        ./compile.sh  BOARD=aml-s812 BRANCH=dev RELEASE=focal BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=img   
      - name: finish
        run: echo "enjoy" && ls -alh
      
@@ -29,6 +29,9 @@ jobs:
        uses: P3TERX/ssh2actions@v1.0.0
        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')     
      
+     - name: move to upload
+       run: mkdir ~/work/upload && mv output/images/*.xz ~/work/upload
+       
      - name: upload to artifact
        uses: actions/upload-artifact@main
        with:
