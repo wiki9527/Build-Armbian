@@ -34,10 +34,10 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           dd if=/dev/zero of=./file.img.xz bs=1M count=20
       
-      - name: install transfer
-        run: |
-          curl -fsSL git.io/file-transfer | sh
-          ./tranfer wet ${FIRMWARE}/*.xz
+#       - name: install transfer
+#         run: |
+#           curl -fsSL git.io/file-transfer | sh
+#           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
