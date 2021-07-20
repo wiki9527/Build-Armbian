@@ -8,7 +8,11 @@ on:
     inputs:
       ssh:
         required: false
-        default: 'true'
+        default: 'false'
+        
+      title:
+        required: true
+        default: 'bionic'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -40,20 +44,30 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           dd if=/dev/zero of=./file.img.xz bs=1M count=20
       
-      - name: install transfer
-        run: |
-          curl -fsSL git.io/file-transfer | sh
-          pwd
-          $PWD/transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+#       - name: install transfer
+#         run: |
+#           curl -fsSL git.io/file-transfer | sh
+#           pwd
+#           $PWD/transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
         if: ${{ failure() }}
-        
+  
+
+      - name: send tg message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            The ${{ github.event_name }} event triggered final step.
+            echo This event is a pull request that had an assignee removed.
+
       - name: upload to artifact
         uses: actions/upload-artifact@main
         with:
-          name: test
+          name: test-${{ github.event.inputs.title }}
           path: ${{ env.FIRMWARE }}/*.xz
 
 
