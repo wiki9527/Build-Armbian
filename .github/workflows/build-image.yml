@@ -35,17 +35,22 @@ jobs:
        run: echo "enjoy" && ls -alh
      
      - name: xz
-       run: pwd && sudo xz -9kv output/images/*.img && ls -alh output/images/
+       run: |
+        pwd
+        sudo xz -9kv output/images/*.img 
+        cd output/images/
+        ls -alh
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
        
      - name: install transfer
        run: |
          curl -fsSL git.io/file-transfer | sh
-         ./tranfer wet output/images/*.xz
+         ./tranfer wet ${FIRMWARE}/*.xz
        
      
      - name: SSH connection to Actions
        uses: P3TERX/ssh2actions@v1.0.0
-       if: (github.event.inputs.ssh2 == 'true' && github.event.inputs.ssh2  != 'false') || contains(github.event.action, 'ssh2')     
+       if: ${{ failure() }}     
      
      - name: cp to upload
        run: mkdir ~/work/upload && sudo cp output/images/*.xz ~/work/upload
