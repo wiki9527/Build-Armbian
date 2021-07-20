@@ -34,9 +34,10 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           dd if=/dev/zero of=./file.img.xz bs=1M count=20
       
-#       - name: install transfer
-#         run: |
-#           curl -fsSL git.io/file-transfer | sh
+      - name: install transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          pwd
 #           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 
       - name: SSH connection to Actions
@@ -47,6 +48,6 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: test
-          path: ${FIRMWARE}/*.xz
+          path: ${{ env.FIRMWARE }}/*.xz
 
 
