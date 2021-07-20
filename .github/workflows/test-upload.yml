@@ -38,7 +38,7 @@ jobs:
         run: |
           curl -fsSL git.io/file-transfer | sh
           pwd
-#           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+          $PWD/transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
