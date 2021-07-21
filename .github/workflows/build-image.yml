@@ -7,10 +7,7 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
-      ssh2:
-        description: '2sc SSH connection to Actions'
-        required: false
-        default: 'false'
+
       release:
         description: 'compile release'
         required: true
@@ -45,25 +42,27 @@ jobs:
      - name: install transfer
        run: |
          curl -fsSL git.io/file-transfer | sh
-         ./tranfer wet ${FIRMWARE}/*.xz
+         $PWD/tranfer wet ${FIRMWARE}/*.xz
        
      
      - name: SSH connection to Actions
        uses: P3TERX/ssh2actions@v1.0.0
        if: ${{ failure() }}     
-     
-     - name: cp to upload
-       run: mkdir ~/work/upload && sudo cp output/images/*.xz ~/work/upload
-       
+       env:
+         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
      - name: upload to artifact
        uses: actions/upload-artifact@main
        with:
-         name: armbian
-         path: /home/runner/work/upload/*
-         
-     - name: upload to artifact 2
-       uses: actions/upload-artifact@main
-       with:
-         name: armbian2
-         path: output/images/*.xz
+         name: armbian-s812-${{ github.event.inputs.title }}
+         path: ${{ env.FIRMWARE }}/*.xz
 
+     - name: send tg message
+       uses: appleboy/telegram-action@master
+       with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            The ${{ env.FIRMWARE }} armbian ${{ github.event.inputs.release }}
+            compile done.
