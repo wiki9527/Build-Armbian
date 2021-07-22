@@ -12,7 +12,7 @@ on:
         
       title:
         required: true
-        default: 'bionic'
+        default: 'compile'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,9 +32,7 @@ jobs:
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
         if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      
 
       # Runs a set of commands using the runners shell
       - name: touch xz file
@@ -42,17 +40,20 @@ jobs:
           mkdir -p output/images
           cd output/images
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-          dd if=/dev/zero of=./file.img.xz bs=1M count=20
+          dd if=/dev/zero of=./file.img.xz count=2
       
-#       - name: install transfer
-#         run: |
-#           curl -fsSL git.io/file-transfer | sh
+      - name: install transfer
+        run: |
+          curl -fsSL git.io/file-transfer | sh
 #           pwd
 #           $PWD/transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
         if: ${{ failure() }}
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   
 
       - name: send tg message
@@ -61,8 +62,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            The ${{ github.event_name }} event triggered final step.
-            echo This event is a pull request that had an assignee removed.
+            test-upload done.
 
       - name: upload to artifact
         uses: actions/upload-artifact@main
