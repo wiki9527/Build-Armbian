@@ -25,6 +25,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: create script
+        run: echo 'echo "UPLOAD=no" >> $GITHUB_ENV' > turn_off.sh
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -36,6 +39,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: touch xz file
+        if: ${{ env.UPLOAD != 'no' }}
         run: |
           mkdir -p output/images
           cd output/images
