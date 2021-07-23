@@ -11,7 +11,7 @@ on:
       release:
         description: 'compile release'
         required: true
-        default: focal
+        default: bionic
       branch:
 #         description: 'compile release'
         required: true
@@ -39,10 +39,10 @@ jobs:
         ls -alh
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
        
-     - name: install transfer
+     - name: install transfer and upload to wet
        run: |
          curl -fsSL git.io/file-transfer | sh
-         $PWD/tranfer wet ${FIRMWARE}/*.xz
+         $PWD/transfer wet ${FIRMWARE}/*.xz
        
      
      - name: SSH connection to Actions
@@ -55,7 +55,7 @@ jobs:
      - name: upload to artifact
        uses: actions/upload-artifact@main
        with:
-         name: armbian-s812-${{ github.event.inputs.title }}
+         name: armbian-s812-${{ github.event.inputs.release }}
          path: ${{ env.FIRMWARE }}/*.xz
 
      - name: send tg message
